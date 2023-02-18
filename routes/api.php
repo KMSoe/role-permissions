@@ -29,6 +29,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 Route::get('/user', [AuthController::class, 'getUser'])->middleware('auth:api');
+Route::post('/change-password', [AuthController::class, 'changePassword'])->middleware('auth:api');
 
 Route::middleware(['auth:api'])->group(function () {
     // Dashboard
