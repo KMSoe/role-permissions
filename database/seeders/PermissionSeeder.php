@@ -40,9 +40,9 @@ class PermissionSeeder extends Seeder
         }
 
         // create roles and assign existing permissions
-        $role1 = Role::create(['name' => 'customer']);
+        $role1 = Role::create(['name' => 'standard']);
 
-        $role2 = Role::create(['name' => 'admin']);
+        $role2 = Role::create(['name' => 'manager']);
         foreach ($permissions as $permission) {
             $role2->givePermissionTo($permission);
         }
@@ -58,8 +58,8 @@ class PermissionSeeder extends Seeder
         $user->assignRole($role3);
 
         $user = \App\Models\User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
+            'name' => 'Manager',
+            'email' => 'manager@example.com',
         ]);
         $user->assignRole($role2);
 
