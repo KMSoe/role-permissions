@@ -1,29 +1,20 @@
 <?php
 
-namespace Modules\Auth\Http\Controllers\Api;
+namespace App\Http\Controllers\Auth\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Rules\Auth\MatchOldPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Passport\RefreshToken;
 use Laravel\Passport\Token;
-use Laravel\Socialite\Facades\Socialite;
-use Modules\Auth\Helpers\AuthHelper;
-use Modules\Auth\Http\Requests\Api\EmailLoginRequest;
-use Modules\Auth\Http\Requests\Api\PhoneLoginRequest;
-use Modules\Auth\Http\Requests\Api\RegisterRequest;
-use Modules\Auth\Http\Resources\AuthCollection;
-use Modules\Auth\Http\Resources\AuthResource;
-use Modules\Auth\Rules\MatchOldPassword;
 
 class AuthController extends Controller
 {
-    public function loginWithEmail(EmailLoginRequest $request)
+    public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -55,7 +46,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'token' => $token,
                 'data' => $user,
-                'message' => 'Login statusful'
+                'message' => 'Login successful'
             ], 200);
         } else {
             return response()->json([
@@ -64,19 +55,6 @@ class AuthController extends Controller
                 "message" => "Incorrect Email and/or Password"
             ], 401);
         }
-    }
-
-
-    public function loginWithPhone(PhoneLoginRequest $request)
-    {
-    }
-
-    public function phoneOtpVerify(Request $request)
-    {
-    }
-
-    public function register(RegisterRequest $request)
-    {
     }
 
     public function logout(Request $request)
@@ -133,53 +111,4 @@ class AuthController extends Controller
             'message' => 'Password Changed statusfully'
         ], 200);
     }
-
-    protected function _registerOrLoginUser($data)
-    {
-        $user = User::where('email', $data->email)->first();
-
-        if (!$user) {
-            $user = new User();
-            $user->name = $data->name;
-            $user->email = $data->email;
-            $user->account_id = 1;
-            $user->provider_id = $data->id;
-            $user->avatar = $data->avatar;
-            $user->save();
-        }
-
-        Auth::login($user);
-    }
-
-    //Google Login
-    // public function redirectToGoogle()
-    // {
-    //     return Socialite::driver('google')->redirect();
-    // }
-
-    //Google callback  
-    // public function handleGoogleCallback()
-    // {
-
-    //     $user = Socialite::driver('google')->user();
-
-    //     $this->_registerorLoginUser($user);
-    //     return redirect()->route('home.index');
-    // }
-
-    //Facebook Login
-    // public function redirectToFacebook()
-    // {
-    //     return Socialite::driver('facebook')->redirect();
-    // }
-
-    //facebook callback  
-    // public function handleFacebookCallback()
-    // {
-
-    //     $user = Socialite::driver('facebook')->user();
-
-    //     $this->_registerorLoginUser($user);
-    //     return redirect()->route('home.index');
-    // }
 }
