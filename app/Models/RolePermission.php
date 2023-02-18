@@ -9,4 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class RolePermission extends Model
 {
     use HasFactory, SoftDeletes;
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function permission()
+    {
+        return $this->belongsTo(Permission::class);
+    }
 }

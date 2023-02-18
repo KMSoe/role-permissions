@@ -6,12 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Staff extends Model
+class RoleUser extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public function department()
+    public function user()
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 }
