@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\RolePermission;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Support\Str;
 
 class PermissionSeeder extends Seeder
 {
@@ -16,9 +17,6 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        // Reset cached roles and permissions
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
-
         // create permissions
         $permissions = [
             'permission list',
@@ -29,44 +27,50 @@ class PermissionSeeder extends Seeder
             'role create',
             'role edit',
             'role delete',
-            'user list',
-            'user create',
-            'user edit',
-            'user delete'
-         ];
+            'staff list',
+            'same department staff list',
+            'staff create',
+            'staff edit',
+            'staff delete'
+        ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::create(['name' => $permission, 'label' => Str::slug($permission)]);
         }
 
         // create roles and assign existing permissions
-        $role1 = Role::create(['name' => 'standard']);
+        $standard_role = Role::where('name', 'standard')->first();
+        $manager_role = Role::where('name', 'manager')->first();
+        $admin_role = Role::where('name', 'super-admin')->first();
 
-        $role2 = Role::create(['name' => 'manager']);
-        foreach ($permissions as $permission) {
-            $role2->givePermissionTo($permission);
+        $admin_permissions = Permission::get();
+        foreach ($admin_permissions as $permission) {
+            RolePermission::create([
+                'role_id' => $admin_role->id,
+                'permission_id' => $permission->id,
+            ]);
         }
 
-        $role3 = Role::create(['name' => 'super-admin']);
-        // gets all permissions via Gate::before rule; see AuthServiceProvider
+        $manager_permissions = Permission::whereIn('name', [
+            'permission list', 'role list', 'same department staff list', 'staff create',
+            'staff edit',
+            'staff delete'
+        ])
+            ->get();
+        foreach ($manager_permissions as $permission) {
+            RolePermission::create([
+                'role_id' => $manager_role->id,
+                'permission_id' => $permission->id,
+            ]);
+        }
 
-        // create demo users
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@example.com',
-        ]);
-        $user->assignRole($role3);
-
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Manager',
-            'email' => 'manager@example.com',
-        ]);
-        $user->assignRole($role2);
-
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Example User',
-            'email' => 'test@example.com',
-        ]);
-        $user->assignRole($role1);
+        $standard_permissions = Permission::whereIn('name', ['permission list', 'role list'])
+            ->get();
+        foreach ($standard_permissions as $permission) {
+            RolePermission::create([
+                'role_id' => $standard_role->id,
+                'permission_id' => $permission->id,
+            ]);
+        }
     }
 }
