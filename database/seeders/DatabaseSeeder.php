@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             'password' => 'secret'
         ]);
 
-        // $this->call(PermissionSeeder::class);
+        $this->call(DepartmentSeeder::class);
+        $this->call(RoleUserSeeder::class);
+        $this->call(PermissionSeeder::class);
     }
 }
