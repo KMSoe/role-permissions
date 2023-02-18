@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Validation\UnauthorizedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -36,6 +40,23 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (Exception $e, Request $request) {
+            if ($request->is('api/*')) {
+                if ($e instanceof AuthenticationException) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Not Authenticated',
+                    ], 401);
+                } else if($e instanceof UnauthorizedException) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'This action is unauthorized.',
+                    ], 403);
+                }
+                // return response()->json($e);
+            }
         });
     }
 }

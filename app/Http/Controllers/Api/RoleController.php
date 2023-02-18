@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:manage_roles')->except('index');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -41,7 +45,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return 'Stored';
     }
 
     /**
