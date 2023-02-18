@@ -30,7 +30,7 @@ class RegisterRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required|confirmed|min:8',
-            'password_confirmation' => 'required|same:password|min:8',
+            'password_confirmation' => 'required|same:password|min:6',
         ];
     }
 
@@ -50,7 +50,6 @@ class RegisterRequest extends FormRequest
         $user->email = $this->email;
         $user->phone = $this->phone;
         $user->password = bcrypt($this->password);
-        $user->account_id = 1;
 
         $user->save();
 

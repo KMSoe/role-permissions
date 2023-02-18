@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use App\Rules\Auth\MatchOldPassword;
 use Illuminate\Http\Request;
@@ -14,6 +15,56 @@ use Laravel\Passport\Token;
 
 class AuthController extends Controller
 {
+    public function register(RegisterRequest $request)
+    {
+        // $validator = Validator::make($request->all(), [
+        //     'name' => 'required',
+        //     'email' => 'required|email|unique:users',
+        //     'password' => 'required',
+        //     'image' => 'image|mimes:png,jpg,jpeg',
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'errors' => $validator->errors(),
+        //         'message' => 'Fail'
+        //     ], 422);
+        // }
+
+        $request->validated();
+
+        $user = $request->store();
+
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $imagePath = $request->file('image');
+            $imageName = ucwords(explode(" ", $user->name)[0]) . $user->id . time() . "." . $imagePath->extension();
+
+            $path = $request->file('image')->storeAs('profiles', $imageName, 'public');
+
+            $user->image = $imageName;
+            $success = $user->save();
+        }
+
+        $token = $user->createToken('LaravelAuth')->accessToken;
+
+        if ($success) {
+            return response()->json([
+                'status' => true,
+                'id' => $user->id,
+                'data' => $user,
+                'token' => $token,
+                'message' => 'Account Created'
+            ], 201);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => [],
+                'message' => 'Fail'
+            ], 422);
+        }
+    }
+
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
