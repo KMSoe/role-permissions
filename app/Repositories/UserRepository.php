@@ -23,7 +23,7 @@ class UserRepository
             ->get();
 
         return [
-            'staff' => $staff,
+            'info' => $staff,
             'roles' => $roles
         ];
     }

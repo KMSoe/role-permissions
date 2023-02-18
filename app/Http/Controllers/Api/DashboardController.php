@@ -20,11 +20,12 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $data = $repo->get($user->id);
+        $data = (object) $repo->get($user->id);
 
         return response()->json([
             'status' => true,
-            'data' => $data
+            'info' => $data->info,
+            'roles' => $data->roles
         ], 200);
     }
 }
