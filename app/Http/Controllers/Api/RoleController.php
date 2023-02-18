@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Permission;
 use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\RoleUser;
 use App\Models\Staff;
+use App\Repositories\RoleRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,20 +23,15 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(RoleRepository $repo)
     {
         $user = Auth::user();
 
-        $rolesIds = RoleUser::where('user_id', $user->id)
-            ->pluck('role_id')
-            ->toArray();
-
-        $roles = Role::with(['permissions'])->whereIn('id', $rolesIds)
-            ->get();
+        $data = $repo->getByUser($user->id);
 
         return response()->json([
             'status' => true,
-            'data' => $roles
+            'data' => $data
         ], 200);
     }
 
