@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
+use App\Models\RoleUser;
+use App\Models\Staff;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -14,7 +18,19 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+
+        $rolesIds = RoleUser::where('user_id', $user->id)
+            ->pluck('role_id')
+            ->toArray();
+
+        $roles = Role::with(['permissions'])->whereIn('id', $rolesIds)
+            ->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $roles
+        ], 200);
     }
 
     /**

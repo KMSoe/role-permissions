@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\StaffController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\Api\AuthController;
@@ -33,6 +35,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('dashboard', DashboardController::class);
 
     Route::resource('staffs', StaffController::class);
-    Route::resource('roles', StaffController::class);
-    Route::resource('permissions', StaffController::class);
+    Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionController::class);
 });
