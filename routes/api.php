@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\StaffController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\Api\AuthController;
 use Illuminate\Http\Request;
@@ -30,4 +31,8 @@ Route::get('/user', [AuthController::class, 'getUser'])->middleware('auth:api');
 Route::middleware(['auth:api'])->group(function () {
     // Dashboard
     Route::get('dashboard', DashboardController::class);
+
+    Route::resource('staffs', StaffController::class);
+    Route::resource('roles', StaffController::class);
+    Route::resource('permissions', StaffController::class);
 });

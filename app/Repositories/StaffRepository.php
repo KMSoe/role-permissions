@@ -7,42 +7,46 @@ use App\Models\RoleUser;
 use App\Models\Staff;
 use App\Models\User;
 
-class UserRepository
+class StaffRepository
 {
-    public function getByManager($user_id)
+    public function getByDepartment($department_id)
     {
-        $user = User::find($user_id);
-
-        $staff = Staff::with(['department'])->find($user->staff_id);
-
-        $rolesIds = RoleUser::where('user_id', $user->id)
-            ->pluck('role_id')
-            ->toArray();
-
-        $roles = Role::with(['permissions'])->whereIn('id', $rolesIds)
+        $staffs = Staff::with(['department'])->where('department_id', $department_id)
             ->get();
 
-        return [
-            'info' => $staff,
-            'roles' => $roles
-        ];
+        foreach ($staffs as $staff) {
+            $rolesIds = RoleUser::where('user_id', $staff->user->id)
+                ->pluck('role_id')
+                ->toArray();
+
+            $roles = Role::with(['permissions'])->whereIn('id', $rolesIds)
+                ->get();
+
+            $staff['roles'] = $roles;
+        }
+
+        return $staffs;
     }
 
     public function all()
     {
-        $userIds = User::orderBy('created_at', 'DESC')
-            ->pluck('id')
+        $staffIds = User::orderBy('created_at', 'DESC')
+            ->pluck('staff_id')
             ->toArray();
 
-        $staffs = Staff::with(['department'])->whereIn('id', $userIds)
+        $staffs = Staff::with(['department'])->whereIn('id', $staffIds)
             ->get();
 
-        $rolesIds = RoleUser::where('user_id', $user->id)
-            ->pluck('role_id')
-            ->toArray();
+        foreach ($staffs as $staff) {
+            $rolesIds = RoleUser::where('user_id', $staff->user->id)
+                ->pluck('role_id')
+                ->toArray();
 
-        $roles = Role::with(['permissions'])->whereIn('id', $rolesIds)
-            ->get();
+            $roles = Role::with(['permissions'])->whereIn('id', $rolesIds)
+                ->get();
+
+            $staff->roles = $roles;
+        }
 
         return $staffs;
     }
