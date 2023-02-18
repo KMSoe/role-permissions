@@ -34,7 +34,13 @@ Route::middleware(['auth:api'])->group(function () {
     // Dashboard
     Route::get('dashboard', DashboardController::class);
 
+    // Staffs
     Route::resource('staffs', StaffController::class);
+    Route::get('same-department-staffs', [StaffController::class, 'getByDepartment']);
+
+    // Roles
     Route::resource('roles', RoleController::class);
+
+    // Permissions
     Route::resource('permissions', PermissionController::class);
 });
