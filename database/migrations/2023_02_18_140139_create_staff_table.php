@@ -26,6 +26,7 @@ class CreateStaffTable extends Migration
             $table->enum('gender', ['male', 'female', 'others', 'prefer not to disclose']);
             $table->integer('status')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -8,11 +8,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -91,8 +90,8 @@ class User extends Authenticatable
         });
     }
 
-    public function roles()
-    {
-        return $this->hasManyThrough(Role::class, RoleUser::class, 'role_id', 'user_id');
-    }
+    // public function roles()
+    // {
+    //     return $this->hasManyThrough(Role::class, RoleUser::class, 'user_id', 'role_id');
+    // }
 }

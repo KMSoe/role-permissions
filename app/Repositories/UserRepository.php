@@ -11,9 +11,9 @@ class UserRepository
 {
     public function get($user_id)
     {
-        $user = User::with(['roles'])->findOrFail($user_id);
+        $user = User::find($user_id);
 
-        $staff = Staff::with(['department'])->findOrFail($user->staff_id);
+        $staff = Staff::with(['department'])->find($user->staff_id);
 
         $rolesIds = RoleUser::where('user_id', $user->id)
             ->pluck('role_id')

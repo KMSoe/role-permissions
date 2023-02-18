@@ -21,8 +21,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'John Doe',
             'email' => 'johndoe@example.com',
-            'password' => 'secret',
-            'owner' => true,
+            'password' => 'secret'
         ]);
 
         // $this->call(PermissionSeeder::class);
