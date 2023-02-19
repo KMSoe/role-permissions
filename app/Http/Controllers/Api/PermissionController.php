@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Permission;
 use App\Repositories\PermissionRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,10 @@ use Illuminate\Support\Facades\Validator;
 
 class PermissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Permission::class, 'permission');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -110,7 +115,7 @@ class PermissionController extends Controller
                 'message' => 'Fail'
             ], 422);
         }
-        
+
         $data = [
             'name' => $request->name,
             'assign_roles' => $request->assign_roles

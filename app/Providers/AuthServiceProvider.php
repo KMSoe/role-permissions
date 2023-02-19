@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\User;
+use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +21,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-        Role::class => RolePolicy::class
+        Role::class => RolePolicy::class,
+        Permission::class => PermissionPolicy::class
     ];
 
     /**
@@ -31,20 +34,20 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('manage_roles', function (User $user) {
-            $roleIds = RoleUser::where('user_id', $user->id)
-                ->pluck('role_id')
-                ->toArray();
+        // Gate::define('manage_roles', function (User $user) {
+        //     $roleIds = RoleUser::where('user_id', $user->id)
+        //         ->pluck('role_id')
+        //         ->toArray();
 
-            $roles = Role::whereIn('id', $roleIds)->get();
+        //     $roles = Role::whereIn('id', $roleIds)->get();
 
-            foreach ($roles as $role) {
-                if ($role->name == 'super-admin') {
-                    return true;
-                }
-            }
+        //     foreach ($roles as $role) {
+        //         if ($role->name == 'super-admin') {
+        //             return true;
+        //         }
+        //     }
 
-            return false;
-        });
+        //     return false;
+        // });
     }
 }

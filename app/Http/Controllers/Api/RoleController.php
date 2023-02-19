@@ -17,8 +17,8 @@ class RoleController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Role::class, 'role');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,6 +26,7 @@ class RoleController extends Controller
      */
     public function index(RoleRepository $repo)
     {
+        $this->authorize('viewAny', Role::class);
         $user = Auth::user();
 
         $data = $repo->getByUser($user->id);
@@ -38,6 +39,7 @@ class RoleController extends Controller
 
     public function roleList(RoleRepository $repo)
     {
+        $this->authorize('roleList', Role::class);
 
         $data = $repo->all();
 
@@ -56,6 +58,8 @@ class RoleController extends Controller
      */
     public function store(Request $request, RoleRepository $repo)
     {
+        $this->authorize('create', Role::class);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
         ]);
@@ -89,6 +93,8 @@ class RoleController extends Controller
      */
     public function show($id, RoleRepository $repo)
     {
+        $this->authorize('view', Role::class);
+
         $item = $repo->show($id);
 
         return response()->json([
@@ -107,6 +113,8 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id, RoleRepository $repo)
     {
+        $this->authorize('update', Role::class);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
         ]);
@@ -138,8 +146,10 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, RoleRepository $repo)
+    public function destroy(RoleRepository $repo, $id)
     {
+        $this->authorize('delete', Role::class);
+
         $item = $repo->destroy($id);
 
         return response()->json([], 204);

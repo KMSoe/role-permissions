@@ -41,9 +41,7 @@ class RoleRepository
 
     public function show($id)
     {
-
-        $role = Role::where('id', $id)
-            ->get();
+        $role = Role::find($id);
 
         $permissionIds = RolePermission::where('role_id', $role->id)->pluck('permission_id')
             ->toArray();

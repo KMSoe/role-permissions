@@ -6,9 +6,8 @@ use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
-class RolePolicy
+class PermissionPolicy
 {
     use HandlesAuthorization;
 
@@ -32,12 +31,12 @@ class RolePolicy
         return true;
     }
 
-    public function roleList(User $user)
+    public function permissionList(User $user)
     {
         return $this->allowOnlyAdmin($user);
     }
 
-    public function create(User $user)
+    public function store(User $user)
     {
         return $this->allowOnlyAdmin($user);
     }
