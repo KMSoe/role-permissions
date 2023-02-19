@@ -39,12 +39,12 @@ class StaffPolicy
 
     public function create(User $user)
     {
-        return $this->allowOnlyAdmin($user);
+        return $this->allowAdminAndManager($user);
     }
 
-    public function update(User $user)
+    public function update(User $user, Staff $staff)
     {
-        return $this->allowOnlyAdmin($user);
+        return $this->allowOnlyAdmin($user) || $this->allowSelf($user, $staff);
     }
 
     public function delete(User $user)

@@ -120,19 +120,20 @@ class StaffRepository
         $staff->code = CoreHelper::generateRandomString($code_prefix, 6);
         $staff->name = $data->name;
         $staff->email = $data->email;
-        $staff->mobile = $data->phone;
+        $staff->mobile = $data->mobile;
         $staff->join_date = $now->format('Y-m-d');
         $staff->department_id = $data->department_id;
         $staff->position = $data->position;
         $staff->age = $data->age;
         $staff->gender = $data->gender;
-        $staff->created_by = $data->createdBy;
+        $staff->created_by = $data->created_by;
+        $staff->save();
 
         \App\Models\User::factory()->create([
             'name' => $data->name,
             'email' => $data->email,
             'staff_id' => $staff->id,
-            'created_by' => $data->createdBy
+            'created_by' => $data->created_by
         ]);
 
         return $staff;
@@ -153,13 +154,14 @@ class StaffRepository
         $staff->position = $data->position;
         $staff->age = $data->age;
         $staff->gender = $data->gender;
-        $staff->created_by = $data->createdBy;
+        $staff->updated_by = $data->updated_by;
+        $staff->save();
 
         \App\Models\User::factory()->where('staff_id', $staff->id)->update([
             'name' => $data->name,
             'email' => $data->email,
             'staff_id' => $staff->id,
-            'created_by' => $data->createdBy
+            'updated_by' => $data->updated_by
         ]);
 
         return $staff;

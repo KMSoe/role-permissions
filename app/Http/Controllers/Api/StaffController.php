@@ -19,7 +19,7 @@ class StaffController extends Controller
      */
     public function index(StaffRepository $repo)
     {
-        $this->authorize('viewAny', Permission::class);
+        $this->authorize('viewAny', Staff::class);
 
         $staffs = $repo->all();
 
@@ -36,7 +36,7 @@ class StaffController extends Controller
      */
     public function getByDepartment(StaffRepository $repo)
     {
-        $this->authorize('viewByDepartment', Permission::class);
+        $this->authorize('viewByDepartment', Staff::class);
 
         $user = Auth::user();
 
@@ -60,16 +60,18 @@ class StaffController extends Controller
      */
     public function store(Request $request, StaffRepository $repo)
     {
-        $this->authorize('create', Permission::class);
+        $user = Auth::user();
+
+        $this->authorize('create', Staff::class);
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required',
             'mobile' => 'required',
-            'depardment_id' => 'required',
+            'department_id' => 'required',
             'position' => 'required',
             'age' => 'required|numeric',
-            'gender' => 'required|in:male,female,'
+            'gender' => 'required|in:male,female,others,prefer not to disclose'
         ]);
 
         if ($validator->fails()) {
@@ -84,10 +86,11 @@ class StaffController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'mobile' => $request->mobile,
-            'depardment_id' => $request->depardment_id,
+            'department_id' => $request->department_id,
             'position' => $request->position,
             'age' => $request->age,
             'gender' => $request->gender,
+            'created_by' => $user->id
         ];
 
         $item = $repo->store((object)$data);
@@ -107,7 +110,7 @@ class StaffController extends Controller
      */
     public function show($id, StaffRepository $repo)
     {
-        $this->authorize('view', Permission::class);
+        $this->authorize('view', Staff::class);
 
         $data = $repo->show($id);
 
@@ -127,16 +130,18 @@ class StaffController extends Controller
      */
     public function update(Request $request, $id, StaffRepository $repo)
     {
-        $this->authorize('update', Permission::class);
+        $user = Auth::user();
+
+        $this->authorize('update', Staff::class);
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required',
             'mobile' => 'required',
-            'depardment_id' => 'required',
+            'department_id' => 'required',
             'position' => 'required',
             'age' => 'required|numeric',
-            'gender' => 'required'
+            'gender' => 'required|in:male,female,others,prefer not to disclose'
         ]);
 
         if ($validator->fails()) {
@@ -151,10 +156,11 @@ class StaffController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'mobile' => $request->mobile,
-            'depardment_id' => $request->depardment_id,
+            'department_id' => $request->department_id,
             'position' => $request->position,
             'age' => $request->age,
             'gender' => $request->gender,
+            'updated_by' => $user->id
         ];
 
         $item = $repo->update($id, (object)$data);
@@ -174,7 +180,7 @@ class StaffController extends Controller
      */
     public function destroy($id, StaffRepository $repo)
     {
-        $this->authorize('delete', Permission::class);
+        $this->authorize('delete', Staff::class);
 
         $item = $repo->destroy($id);
 
