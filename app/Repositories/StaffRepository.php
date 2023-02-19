@@ -85,6 +85,32 @@ class StaffRepository
         return $staffs;
     }
 
+    public function show($id)
+    {
+        $staff = Staff::with(['department'])->findOrFail($id);
+
+
+
+        $rolesIds = RoleUser::where('user_id', $staff->user->id)
+            ->pluck('role_id')
+            ->toArray();
+
+        $roles = Role::whereIn('id', $rolesIds)
+            ->get();
+
+        foreach ($roles as $role) {
+            $permissionIds = RolePermission::where('role_id', $role->id)->pluck('permission_id')
+                ->toArray();
+
+            $role->permissions = Permission::whereIn('id', $permissionIds)
+                ->get();
+        }
+
+        $staff->roles = $roles;
+
+        return $staff;
+    }
+
     public function store($data)
     {
         $now = Carbon::now();
