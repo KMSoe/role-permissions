@@ -2,12 +2,14 @@
 
 namespace App\Repositories;
 
+use App\Helpers\CoreHelper;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\RolePermission;
 use App\Models\RoleUser;
 use App\Models\Staff;
 use App\Models\User;
+use Carbon\Carbon;
 
 class StaffRepository
 {
@@ -81,5 +83,65 @@ class StaffRepository
         }
 
         return $staffs;
+    }
+
+    public function store($data)
+    {
+        $now = Carbon::now();
+
+        $staff = new Staff();
+        $staff->code = CoreHelper::generateRandomString('IT', 6);
+        $staff->name = $data->name;
+        $staff->email = $data->email;
+        $staff->mobile = $data->phone;
+        $staff->join_date = $now->format('Y-m-d');
+        $staff->department_id = $data->department_id;
+        $staff->position = $data->position;
+        $staff->age = $data->age;
+        $staff->gender = $data->gender;
+        $staff->created_by = $data->createdBy;
+
+        \App\Models\User::factory()->create([
+            'name' => $data->name,
+            'email' => $data->email,
+            'staff_id' => $staff->id,
+            'created_by' => $data->createdBy
+        ]);
+
+        return $staff;
+    }
+
+    public function update($id, $data)
+    {
+        $now = Carbon::now();
+
+        $staff = Staff::find($id);
+        $staff->code = CoreHelper::generateRandomString('IT', 6);
+        $staff->name = $data->name;
+        $staff->email = $data->email;
+        $staff->mobile = $data->phone;
+        $staff->join_date = $now->format('Y-m-d');
+        $staff->department_id = $data->department_id;
+        $staff->position = $data->position;
+        $staff->age = $data->age;
+        $staff->gender = $data->gender;
+        $staff->created_by = $data->createdBy;
+
+        \App\Models\User::factory()->where('staff_id', $staff->id)->update([
+            'name' => $data->name,
+            'email' => $data->email,
+            'staff_id' => $staff->id,
+            'created_by' => $data->createdBy
+        ]);
+
+        return $staff;
+    }
+
+    public function destroy($id)
+    {
+        $staff = Staff::findOrFail($id);
+        $staff->delete();
+
+        return true;
     }
 }
