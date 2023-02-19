@@ -11,6 +11,7 @@ use App\Models\Staff;
 use App\Repositories\RoleRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class RoleController extends Controller
 {
@@ -55,6 +56,18 @@ class RoleController extends Controller
      */
     public function store(Request $request, RoleRepository $repo)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+                'message' => 'Fail'
+            ], 422);
+        }
+
         $data = [
             'name' => $request->name
         ];
@@ -94,6 +107,18 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id, RoleRepository $repo)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+                'message' => 'Fail'
+            ], 422);
+        }
+        
         $data = [
             'name' => $request->name
         ];

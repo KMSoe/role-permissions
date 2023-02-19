@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\PermissionRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class PermissionController extends Controller
 {
@@ -44,6 +45,19 @@ class PermissionController extends Controller
      */
     public function store(Request $request, PermissionRepository $repo)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'assign_roles' => 'nullable'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+                'message' => 'Fail'
+            ], 422);
+        }
+        
         $data = [
             'name' => $request->name,
             'assign_roles' => $request->assign_roles
@@ -84,6 +98,19 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id, PermissionRepository $repo)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'assign_roles' => 'nullable'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+                'message' => 'Fail'
+            ], 422);
+        }
+        
         $data = [
             'name' => $request->name,
             'assign_roles' => $request->assign_roles
