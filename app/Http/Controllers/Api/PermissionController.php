@@ -26,6 +26,16 @@ class PermissionController extends Controller
         ], 200);
     }
 
+    public function permissionList(PermissionRepository $repo)
+    {
+        $data = $repo->all();
+
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ], 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

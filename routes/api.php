@@ -41,7 +41,10 @@ Route::middleware(['auth:api'])->group(function () {
 
     // Roles
     Route::resource('roles', RoleController::class);
+    Route::get('role-list', [RoleController::class, 'roleList']);
 
     // Permissions
     Route::resource('permissions', PermissionController::class);
+    Route::get('permission-list', [PermissionController::class, 'permissionList']);
+
 });

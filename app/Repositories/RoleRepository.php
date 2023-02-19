@@ -32,6 +32,13 @@ class RoleRepository
         return $roles;
     }
 
+    public function all()
+    {
+        $data = Role::all();
+
+        return $data;
+    }
+
     public function show($id)
     {
 

@@ -28,6 +28,13 @@ class PermissionRepository
         return $permissions;
     }
 
+    public function all()
+    {
+        $data = Permission::all();
+
+        return $data;
+    }
+
     public function show($id)
     {
         $item = Permission::find($id);

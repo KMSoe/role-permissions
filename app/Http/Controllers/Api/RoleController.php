@@ -35,6 +35,18 @@ class RoleController extends Controller
         ], 200);
     }
 
+    public function roleList(RoleRepository $repo)
+    {
+
+        $data = $repo->all();
+
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ], 200);
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *
