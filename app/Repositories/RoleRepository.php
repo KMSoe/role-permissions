@@ -8,6 +8,7 @@ use App\Models\RolePermission;
 use App\Models\RoleUser;
 use App\Models\Staff;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class RoleRepository
 {
@@ -29,5 +30,50 @@ class RoleRepository
         }
 
         return $roles;
+    }
+
+    public function show($id)
+    {
+
+        $role = Role::where('id', $id)
+            ->get();
+
+        $permissionIds = RolePermission::where('role_id', $role->id)->pluck('permission_id')
+            ->toArray();
+
+        $role->permissions = Permission::whereIn('id', $permissionIds)
+            ->get();
+
+        return $role;
+    }
+
+    public function store($data)
+    {
+        $role = new Role();
+        $role->name = $data->name;
+        $role->label = Str::slug($data->name);
+        $role->flag = 0;
+        $role->save();
+
+        return $role;
+    }
+
+    public function update($id, $data)
+    {
+        $role = Role::findOrFail($id);
+        $role->name = $data->name;
+        $role->label = Str::slug($data->name);
+        $role->flag = 0;
+        $role->save();
+
+        return $role;
+    }
+
+    public function destroy($id)
+    {
+        $role = Role::findOrFail($id);
+        $role->delete();
+
+        return true;
     }
 }
