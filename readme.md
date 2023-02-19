@@ -41,6 +41,12 @@ Run database migrations and database seeder:
 php artisan migrate:fresh --seed
 ```
 
+Create Laravel Passport Personal access client:
+
+```sh
+php artisan passport:install
+```
+
 Run the dev server (the output will give the address):
 
 ```sh
