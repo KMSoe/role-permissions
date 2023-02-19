@@ -67,6 +67,9 @@ Standard User
 - **Username:** standard@example.com
 - **Password:** password
 
+## APIs
+To run APIs, the postman collection file is attached in the zip. The environmental variable **base_url** is the url where you run (eg. 0.0.0.0:8000/api or 127.0.0.0:8000/api). The **prefix /api** is included.
+
 ## Running tests
 
 To run the Role Permission Management tests, run:
