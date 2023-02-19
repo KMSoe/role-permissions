@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Helpers\CoreHelper;
+use App\Models\Department;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\RolePermission;
@@ -89,8 +90,6 @@ class StaffRepository
     {
         $staff = Staff::with(['department'])->findOrFail($id);
 
-
-
         $rolesIds = RoleUser::where('user_id', $staff->user->id)
             ->pluck('role_id')
             ->toArray();
@@ -115,8 +114,10 @@ class StaffRepository
     {
         $now = Carbon::now();
 
+        $code_prefix = Department::find($data->department_id)->name;
+
         $staff = new Staff();
-        $staff->code = CoreHelper::generateRandomString('IT', 6);
+        $staff->code = CoreHelper::generateRandomString($code_prefix, 6);
         $staff->name = $data->name;
         $staff->email = $data->email;
         $staff->mobile = $data->phone;
@@ -140,9 +141,10 @@ class StaffRepository
     public function update($id, $data)
     {
         $now = Carbon::now();
+        $code_prefix = Department::find($data->department_id)->name;
 
         $staff = Staff::find($id);
-        $staff->code = CoreHelper::generateRandomString('IT', 6);
+        $staff->code = CoreHelper::generateRandomString($code_prefix, 6);
         $staff->name = $data->name;
         $staff->email = $data->email;
         $staff->mobile = $data->phone;
