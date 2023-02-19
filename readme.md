@@ -29,10 +29,10 @@ Generate application key:
 php artisan key:generate
 ```
 
-Create an MySQL database - role_db.
+Create an MySQL database - ngo_db.
 
 ```sh
-create database role_db;
+create database ngo_db;
 ```
 
 Run database migrations and database seeder:
