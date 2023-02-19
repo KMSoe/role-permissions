@@ -17,7 +17,7 @@ class RoleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:manage_roles')->except('index');
+        $this->authorizeResource(Role::class, 'role');
     }
     /**
      * Display a listing of the resource.
@@ -118,7 +118,7 @@ class RoleController extends Controller
                 'message' => 'Fail'
             ], 422);
         }
-        
+
         $data = [
             'name' => $request->name
         ];

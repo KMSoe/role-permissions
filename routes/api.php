@@ -41,7 +41,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     // Roles
     Route::resource('roles', RoleController::class);
-    Route::get('role-list', [RoleController::class, 'roleList']);
+    Route::get('role-list', [RoleController::class, 'roleList'])->can('roleList', 'App\Models\Role');;
 
     // Permissions
     Route::resource('permissions', PermissionController::class);
