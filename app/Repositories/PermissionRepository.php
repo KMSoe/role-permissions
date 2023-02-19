@@ -14,7 +14,18 @@ class PermissionRepository
 {
     public function getByUser($user_id)
     {
-        
+        $rolesIds = RoleUser::where('user_id', $user_id)
+            ->pluck('role_id')
+            ->toArray();
+
+
+        $permissionIds = RolePermission::whereIn('role_id', $rolesIds)->pluck('permission_id')
+            ->toArray();
+
+        $permissions = Permission::whereIn('id', $permissionIds)
+            ->get();
+
+        return $permissions;
     }
 
     public function show($id)

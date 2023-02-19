@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\PermissionRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends Controller
 {
@@ -12,9 +14,16 @@ class PermissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PermissionRepository $repo)
     {
-        //
+        $user = Auth::user();
+
+        $data = $repo->getByUser($user->id);
+
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ], 200);
     }
 
     /**
@@ -23,9 +32,20 @@ class PermissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, PermissionRepository $repo)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'assign_roles' => $request->assign_roles
+        ];
+
+        $item = $repo->store((object)$data);
+
+        return response()->json([
+            'status' => true,
+            'data' => $item,
+            'message' => 'Created Successfully'
+        ], 201);
     }
 
     /**
@@ -34,9 +54,15 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, PermissionRepository $repo)
     {
-        //
+        $item = $repo->show($id);
+
+        return response()->json([
+            'status' => true,
+            'data' => $item,
+            'message' => ''
+        ], 200);
     }
 
     /**
@@ -46,9 +72,20 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, PermissionRepository $repo)
     {
-        //
+        $data = [
+            'name' => $request->name,
+            'assign_roles' => $request->assign_roles
+        ];
+
+        $item = $repo->update($id, (object)$data);
+
+        return response()->json([
+            'status' => true,
+            'data' => $item,
+            'message' => 'Updated Successfully'
+        ], 200);
     }
 
     /**
@@ -57,8 +94,10 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, PermissionRepository $repo)
     {
-        //
+        $item = $repo->destroy($id);
+
+        return response()->json([], 204);
     }
 }
