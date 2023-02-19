@@ -19,6 +19,8 @@ class StaffController extends Controller
      */
     public function index(StaffRepository $repo)
     {
+        $this->authorize('viewAny', Permission::class);
+
         $staffs = $repo->all();
 
         return response()->json([
@@ -34,6 +36,8 @@ class StaffController extends Controller
      */
     public function getByDepartment(StaffRepository $repo)
     {
+        $this->authorize('viewByDepartment', Permission::class);
+
         $user = Auth::user();
 
         $department_id = Staff::where('id', $user->staff_id)
@@ -56,6 +60,8 @@ class StaffController extends Controller
      */
     public function store(Request $request, StaffRepository $repo)
     {
+        $this->authorize('create', Permission::class);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required',
@@ -101,6 +107,8 @@ class StaffController extends Controller
      */
     public function show($id, StaffRepository $repo)
     {
+        $this->authorize('view', Permission::class);
+
         $data = $repo->show($id);
 
         return response()->json([
@@ -119,6 +127,8 @@ class StaffController extends Controller
      */
     public function update(Request $request, $id, StaffRepository $repo)
     {
+        $this->authorize('update', Permission::class);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required',
@@ -164,6 +174,8 @@ class StaffController extends Controller
      */
     public function destroy($id, StaffRepository $repo)
     {
+        $this->authorize('delete', Permission::class);
+
         $item = $repo->destroy($id);
 
         return response()->json([], 204);
