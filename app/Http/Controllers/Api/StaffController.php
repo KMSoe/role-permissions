@@ -110,7 +110,8 @@ class StaffController extends Controller
      */
     public function show($id, StaffRepository $repo)
     {
-        $this->authorize('view', Staff::class);
+        $item = Staff::find($id);
+        $this->authorize('view', $item);
 
         $data = $repo->show($id);
 
@@ -132,7 +133,8 @@ class StaffController extends Controller
     {
         $user = Auth::user();
 
-        $this->authorize('update', Staff::class);
+        $item = Staff::find($id);
+        $this->authorize('update', $item);
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -180,9 +182,10 @@ class StaffController extends Controller
      */
     public function destroy($id, StaffRepository $repo)
     {
-        $this->authorize('delete', Staff::class);
+        $item = Staff::find($id);
+        $this->authorize('delete', $item);
 
-        $item = $repo->destroy($id);
+        $repo->destroy($id);
 
         return response()->json([], 204);
     }
