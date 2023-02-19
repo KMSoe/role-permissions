@@ -13,7 +13,6 @@ class PermissionController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Permission::class, 'permission');
     }
     /**
      * Display a listing of the resource.
@@ -22,6 +21,8 @@ class PermissionController extends Controller
      */
     public function index(PermissionRepository $repo)
     {
+        $this->authorize('viewAny', Permission::class);
+
         $user = Auth::user();
 
         $data = $repo->getByUser($user->id);
@@ -34,6 +35,8 @@ class PermissionController extends Controller
 
     public function permissionList(PermissionRepository $repo)
     {
+        $this->authorize('permissionList', Permission::class);
+
         $data = $repo->all();
 
         return response()->json([
@@ -50,6 +53,8 @@ class PermissionController extends Controller
      */
     public function store(Request $request, PermissionRepository $repo)
     {
+        $this->authorize('create', Permission::class);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'assign_roles' => 'nullable'
@@ -85,6 +90,8 @@ class PermissionController extends Controller
      */
     public function show($id, PermissionRepository $repo)
     {
+        $this->authorize('view', Permission::class);
+
         $item = $repo->show($id);
 
         return response()->json([
@@ -103,6 +110,8 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id, PermissionRepository $repo)
     {
+        $this->authorize('update', Permission::class);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'assign_roles' => 'nullable'
@@ -138,6 +147,8 @@ class PermissionController extends Controller
      */
     public function destroy($id, PermissionRepository $repo)
     {
+        $this->authorize('delete', Permission::class);
+
         $item = $repo->destroy($id);
 
         return response()->json([], 204);

@@ -36,7 +36,7 @@ class PermissionPolicy
         return $this->allowOnlyAdmin($user);
     }
 
-    public function store(User $user)
+    public function create(User $user)
     {
         return $this->allowOnlyAdmin($user);
     }
